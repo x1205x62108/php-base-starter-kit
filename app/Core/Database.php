@@ -5,7 +5,7 @@ namespace App\Core;
 use PDO;
 use Exception;
 
-class DatabaseManager
+class Database
 {
     private ?PDO $pdo = null;
 
@@ -13,7 +13,7 @@ class DatabaseManager
     {
         $driver = $config['driver'] ?? 'sqlite';
         if ($driver === 'sqlite') {
-            $dbPath = $config['database'] ?? __DIR__ . '/../../database/database.sqlite';
+            $dbPath = $config['database'];
             $dsn = "sqlite:{$dbPath}";
         } else {
             $host = $config['host'];
@@ -29,6 +29,7 @@ class DatabaseManager
             ]);
             if ($driver === 'sqlite') {
                 $this->pdo->exec('PRAGMA foreign_keys = ON;');
+                $this->pdo->exec('PRAGMA busy_timeout = 5000;');
             }
         } catch (Exception $e) {
             throw new Exception("Database Connection Failed: " . $e->getMessage());

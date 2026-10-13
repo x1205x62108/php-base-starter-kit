@@ -10,7 +10,7 @@ class Application
     public Router $router;
     public Request $request;
     public Response $response;
-    public DatabaseManager $db;
+    public Database $db;
     public View $view;
     public static Application $app;
 
@@ -34,11 +34,18 @@ class Application
             'username' => $_ENV['DB_USERNAME'] ?? null,
             'password' => $_ENV['DB_PASSWORD'] ?? null,
         ];
-        $this->db = new DatabaseManager($dbConfig);
+        $this->db = new Database($dbConfig);
     }
 
     public function run()
     {
-        echo $this->router->resolve();
+        try {
+            echo $this->router->resolve();
+        } catch (\Exception $e) {
+            $this->response->setStatusCode($e->getCode() ?: 500);
+            echo $this->view->renderView('_error', [
+                'exception' => $e
+            ]);
+        }
     }
 }
