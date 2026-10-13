@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use PDO;
+use Exception;
 
 class MigrationManager
 {
@@ -18,26 +19,41 @@ class MigrationManager
         $this->createMigrationsTable();
         $appliedMigrations = $this->getAppliedMigrations();
 
-        $newMigrations = [];
         $files = scandir(Application::$ROOT_DIR . '/database/migrations');
+        sort($files); // Ensure order
+        
         $toApplyMigrations = array_diff($files, $appliedMigrations);
+        $count = 0;
 
         foreach ($toApplyMigrations as $migration) {
-            if ($migration === '.' || $migration === '..') {
+            if ($migration === '.' || $migration === '..' || !str_ends_with($migration, '.php')) {
                 continue;
             }
 
             require_once Application::$ROOT_DIR . '/database/migrations/' . $migration;
             $className = pathinfo($migration, PATHINFO_FILENAME);
             $instance = new $className();
-            echo "Applying migration $migration" . PHP_EOL;
-            $instance->up($this->pdo);
-            $this->saveMigration($migration);
-            $newMigrations[] = $migration;
+            
+            echo "Applying migration $migration... ";
+            
+            try {
+                $this->pdo->beginTransaction();
+                $instance->up($this->pdo);
+                $this->saveMigration($migration);
+                $this->pdo->commit();
+                echo "DONE" . PHP_EOL;
+                $count++;
+            } catch (Exception $e) {
+                $this->pdo->rollBack();
+                echo "FAILED: " . $e->getMessage() . PHP_EOL;
+                break;
+            }
         }
 
-        if (empty($newMigrations)) {
+        if ($count === 0) {
             echo "All migrations are applied." . PHP_EOL;
+        } else {
+            echo "Total $count migrations applied." . PHP_EOL;
         }
     }
 
@@ -45,7 +61,7 @@ class MigrationManager
     {
         $this->pdo->exec("CREATE TABLE IF NOT EXISTS migrations (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            migration VARCHAR(255),
+            migration VARCHAR(255) UNIQUE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );");
     }

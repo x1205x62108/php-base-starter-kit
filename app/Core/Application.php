@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use Dotenv\Dotenv;
+use Throwable;
 
 class Application
 {
@@ -26,11 +27,19 @@ class Application
         $dotenv = Dotenv::createImmutable($rootDir);
         $dotenv->safeLoad();
 
+        // Normalize DB path
+        $dbConn = $_ENV['DB_CONNECTION'] ?? 'sqlite';
+        $dbName = $_ENV['DB_DATABASE'] ?? 'database/database.sqlite';
+        
+        if ($dbConn === 'sqlite' && !str_starts_with($dbName, '/')) {
+            $dbName = $rootDir . '/' . ltrim($dbName, '/');
+        }
+
         $dbConfig = [
-            'driver' => $_ENV['DB_CONNECTION'] ?? 'sqlite',
-            'host' => $_ENV['DB_HOST'] ?? '127.0.0.1',
-            'port' => $_ENV['DB_PORT'] ?? '5432',
-            'database' => $_ENV['DB_DATABASE'] ?? $rootDir . '/database/database.sqlite',
+            'driver'   => $dbConn,
+            'host'     => $_ENV['DB_HOST'] ?? '127.0.0.1',
+            'port'     => $_ENV['DB_PORT'] ?? '5432',
+            'database' => $dbName,
             'username' => $_ENV['DB_USERNAME'] ?? null,
             'password' => $_ENV['DB_PASSWORD'] ?? null,
         ];
@@ -41,8 +50,12 @@ class Application
     {
         try {
             echo $this->router->resolve();
-        } catch (\Exception $e) {
-            $this->response->setStatusCode($e->getCode() ?: 500);
+        } catch (Throwable $e) {
+            $code = $e->getCode();
+            if (!is_int($code) || $code < 100 || $code >= 600) {
+                $code = 500;
+            }
+            $this->response->setStatusCode($code);
             echo $this->view->renderView('_error', [
                 'exception' => $e
             ]);

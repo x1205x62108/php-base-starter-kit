@@ -1,6 +1,7 @@
 <?php
 use Modules\Auth\Controllers\AuthController;
+use App\Core\Application;
 
-/** @var App\Core\Router $router */
-$router->add('GET', '/auth/login', [AuthController::class, 'login']);
-$router->add('POST', '/auth/login', [AuthController::class, 'postLogin']);
+/** @var \App\Core\Application $app */
+$app->router->get('/auth/login', [AuthController::class, 'login']);
+$app->router->post('/auth/login', [AuthController::class, 'postLogin']);

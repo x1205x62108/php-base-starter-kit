@@ -4,7 +4,10 @@ use App\Core\Application;
 /** @var \App\Core\Application $app */
 
 $app->router->get('/', function() {
-    return "<h1>PHP Base Starter Kit V0.2</h1><p>SQLite + Migration Engine Online.</p>";
+    return Application::$app->view->renderView('home', [
+        'name' => 'ZYX PHP Base'
+    ]);
 });
 
-$app->router->get('/auth/login', [\Modules\Auth\Controllers\AuthController::class, 'login']);
+// Auth routes are now loaded via ModuleManager, but we can keep a fallback or custom override here if needed.
+// However, according to V0.2.1 fix, they should come from the module.
