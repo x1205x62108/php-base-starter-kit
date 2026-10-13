@@ -4,36 +4,46 @@ namespace App\Core;
 
 class Router
 {
-    private array $routes = [];
+    public Request $request;
+    public Response $response;
+    protected array $routes = [];
 
-    public function add(string $method, string $path, callable|array $handler): void
+    public function __construct(Request $request, Response $response)
     {
-        $this->routes[] = [
-            'method' => $method,
-            'path' => $path,
-            'handler' => $handler
-        ];
+        $this->request = $request;
+        $this->response = $response;
     }
 
-    public function dispatch(): void
+    public function get(string $path, $callback): void
     {
-        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $method = $_SERVER['REQUEST_METHOD'];
+        $this->routes['get'][$path] = $callback;
+    }
 
-        foreach ($this->routes as $route) {
-            if ($route['method'] === $method && $route['path'] === $uri) {
-                $handler = $route['handler'];
-                if (is_callable($handler)) {
-                    $handler();
-                } elseif (is_array($handler)) {
-                    [$controller, $action] = $handler;
-                    (new $controller)->$action();
-                }
-                return;
-            }
+    public function post(string $path, $callback): void
+    {
+        $this->routes['post'][$path] = $callback;
+    }
+
+    public function resolve()
+    {
+        $path = $this->request->getPath();
+        $method = $this->request->getMethod();
+        $callback = $this->routes[$method][$path] ?? false;
+
+        if ($callback === false) {
+            $this->response->setStatusCode(404);
+            return "Not Found";
         }
 
-        http_response_code(404);
-        echo "404 Not Found";
+        if (is_string($callback)) {
+            return Application::$app->view->renderView($callback);
+        }
+
+        if (is_array($callback)) {
+            $controller = new $callback[0]();
+            return call_user_func([$controller, $callback[1]], $this->request, $this->response);
+        }
+
+        return call_user_func($callback, $this->request, $this->response);
     }
 }

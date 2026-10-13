@@ -1,0 +1,27 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use App\Core\Application;
+use App\Core\MigrationManager;
+
+$app = new Application(dirname(__DIR__));
+
+$command = $argv[1] ?? 'list';
+
+switch ($command) {
+    case 'migrate':
+        $manager = new MigrationManager($app->db->getPdo());
+        $manager->applyMigrations();
+        break;
+    case 'module:list':
+        $modules = require __DIR__ . '/../config/modules.php';
+        foreach ($modules as $name => $enabled) {
+            echo sprintf("[%s] %s" . PHP_EOL, $enabled ? 'X' : ' ', $name);
+        }
+        break;
+    default:
+        echo "Usage: php bin/console [migrate|module:list]" . PHP_EOL;
+        break;
+}
