@@ -1,22 +1,43 @@
-# PHP Base Starter Kit
+# ZYX PHP Base Starter Kit
 
-A lightweight, modular PHP development base following PSR-4 standards and a "One-click" philosophy.
+Modern, lightweight PHP application architecture following the "One-click" and "Modular" philosophy.
 
-## Features
-- **Modular**: Enable/disable features in `config/modules.php`.
-- **Lightweight**: No heavy frameworks, just pure PHP with PSR-4 autoloading.
-- **Developer Friendly**: Built-in router, module manager, and starter scripts.
+## 🚀 Project Roadmap
 
-## Installation
-1. Clone the repo.
-2. Run `composer install`.
-3. Copy `.env.example` to `.env`.
-4. Run `./scripts/start.sh`.
+### Phase 1 — PHP Base (Current)
+Establish the most basic execution environment, program architecture, and SQLite support.
+- **V0.1**: Base Skeleton
+- **V0.2**: Base Runtime (Bootstrap, Router, Request, Response)
+- **V0.3**: Base Database (SQLite + PDO, Migrations)
+- **V0.4**: Base Views (Layout, Renderer)
+- **V0.5**: Base Foundation (Helpers, Middleware)
 
-## Directory Structure
-- `app/`: Core application logic (Router, ModuleManager).
-- `modules/`: Pluggable business modules.
-- `public/`: Web server entry point.
-- `config/`: System and module configurations.
+### Phase 2 — PHP Foundation
+Reusable core capabilities and basic components.
+
+### Phase 3 — PHP Starter Kit
+Encapsulate verified functions into enabled/combinable modules.
+
+### Phase 4 — Project Kits
+Template derived from Starter Kit for specific business needs.
+
+## 🛠️ Quick Start
+
+### Installation
+1. `git clone https://github.com/x1205x62108/php-base-starter-kit.git`
+2. `cd php-base-starter-kit`
+3. `./scripts/install.sh`
+
+### Start Development Server
+`./scripts/start.sh` (or `.\scripts\start.ps1` on Windows)
+
+Local URL: http://localhost:8000
+
+## 📂 Core Abilities
+- **Bootstrap**: Unified initialization via `Application.php`.
+- **Router**: Regex-based routing for GET/POST and Controllers.
+- **Database**: SQLite-first with PDO and a custom Migration engine.
+- **View Renderer**: Simple PHP-based SSR with Layout support.
+- **Error Handling**: Unified exception and HTTP error pages.
 
 Built with 🦊✨ for the King.
