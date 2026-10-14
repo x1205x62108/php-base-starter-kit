@@ -24,6 +24,11 @@ class Application
         $this->router = new Router($this->request, $this->response);
         $this->view = new View();
 
+        // Start session for Auth
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $dotenv = Dotenv::createImmutable($rootDir);
         $dotenv->safeLoad();
 

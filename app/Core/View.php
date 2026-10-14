@@ -5,19 +5,29 @@ namespace App\Core;
 class View
 {
     public string $title = 'PHP Base Starter Kit';
+    public string $layout = 'layouts/app';
+
+    public function setLayout(string $layout): void
+    {
+        $this->layout = $layout;
+    }
 
     public function renderView(string $view, array $params = [])
     {
-        $layoutContent = $this->layoutContent();
         $viewContent = $this->renderOnlyView($view, $params);
+        $layoutContent = $this->layoutContent();
         return str_replace('{{content}}', $viewContent, $layoutContent);
     }
 
     protected function layoutContent()
     {
-        $layout = 'layout';
         ob_start();
-        include_once __DIR__ . "/../../resources/views/$layout.php";
+        $layoutPath = Application::$ROOT_DIR . "/resources/views/{$this->layout}.php";
+        if (file_exists($layoutPath)) {
+            include_once $layoutPath;
+        } else {
+            echo "Layout not found: " . $this->layout;
+        }
         return ob_get_clean();
     }
 
@@ -27,7 +37,19 @@ class View
             $$key = $value;
         }
         ob_start();
-        include_once __DIR__ . "/../../resources/views/$view.php";
+        
+        // Try absolute path (for modules) or relative path (for resources/views)
+        $path = $view;
+        if (!file_exists($path)) {
+            $path = Application::$ROOT_DIR . "/resources/views/$view.php";
+        }
+
+        if (file_exists($path)) {
+            include_once $path;
+        } else {
+            echo "View not found: " . $view;
+        }
+        
         return ob_get_clean();
     }
 }

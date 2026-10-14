@@ -2,21 +2,38 @@
 
 namespace Modules\Auth\Controllers;
 
+use App\Core\Application;
+use App\Core\Request;
+use App\Core\Response;
+
 class AuthController
 {
-    public function login(): void
+    public function login(): string
     {
-        echo "<h1>Login Page</h1>";
-        echo '<form method="POST" action="/auth/login">';
-        echo 'Username: <input type="text" name="username"><br>';
-        echo 'Password: <input type="password" name="password"><br>';
-        echo '<button type="submit">Login</button>';
-        echo '</form>';
+        Application::$app->view->setLayout('layouts/auth');
+        Application::$app->view->title = 'Login - ZYX PHP Base';
+        $viewPath = Application::$ROOT_DIR . '/modules/Auth/Views/login.php';
+        return Application::$app->view->renderView($viewPath);
     }
 
-    public function postLogin(): void
+    public function postLogin(Request $request, Response $response)
     {
-        echo "Processing Login...";
-        // Logic here
+        $body = $request->getBody();
+        $username = $body['username'] ?? '';
+        $password = $body['password'] ?? '';
+
+        // Simple hardcoded login for demonstration
+        if ($username === 'admin' && $password === 'admin') {
+            $_SESSION['user'] = ['id' => 1, 'username' => 'admin'];
+            $response->redirect('/');
+            return;
+        }
+
+        // Failed login
+        Application::$app->view->setLayout('layouts/auth');
+        $viewPath = Application::$ROOT_DIR . '/modules/Auth/Views/login.php';
+        echo Application::$app->view->renderView($viewPath, [
+            'error' => 'Invalid username or password.'
+        ]);
     }
 }
