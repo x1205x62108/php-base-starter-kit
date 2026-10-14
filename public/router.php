@@ -5,9 +5,11 @@ $uri = rawurldecode(
 );
 
 // Security: Prevent directory traversal and only allow files in public
-$filePath = __DIR__ . $uri;
-if ($uri !== '/' && file_exists($filePath) && is_file($filePath)) {
+$publicDir = __DIR__;
+$filePath = realpath($publicDir . $uri);
+
+if ($uri !== '/' && $filePath && str_starts_with($filePath, $publicDir) && is_file($filePath)) {
     return false;
 }
 
-require_once __DIR__ . '/index.php';
+require_once $publicDir . '/index.php';

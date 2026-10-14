@@ -14,16 +14,17 @@ class MigrationManager
         $this->pdo = $pdo;
     }
 
-    public function applyMigrations()
+    public function applyMigrations(): bool
     {
         $this->createMigrationsTable();
         $appliedMigrations = $this->getAppliedMigrations();
 
         $files = scandir(Application::$ROOT_DIR . '/database/migrations');
-        sort($files); // Ensure order
+        sort($files); 
         
         $toApplyMigrations = array_diff($files, $appliedMigrations);
         $count = 0;
+        $success = true;
 
         foreach ($toApplyMigrations as $migration) {
             if ($migration === '.' || $migration === '..' || !str_ends_with($migration, '.php')) {
@@ -46,15 +47,20 @@ class MigrationManager
             } catch (Exception $e) {
                 $this->pdo->rollBack();
                 echo "FAILED: " . $e->getMessage() . PHP_EOL;
+                $success = false;
                 break;
             }
         }
 
-        if ($count === 0) {
-            echo "All migrations are applied." . PHP_EOL;
-        } else {
-            echo "Total $count migrations applied." . PHP_EOL;
+        if ($success) {
+            if ($count === 0) {
+                echo "All migrations are applied." . PHP_EOL;
+            } else {
+                echo "Total $count migrations applied." . PHP_EOL;
+            }
         }
+        
+        return $success;
     }
 
     protected function createMigrationsTable()

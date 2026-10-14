@@ -38,13 +38,18 @@ npm install
 npm run dev
 ```
 
-注意：PHP Server 和 CSS Watcher 是兩個獨立程序。
+## 3. 正式建置與交付規範 (Delivery)
 
-## 3. 正式建置 CSS
+當您修改了 HTML 或 CSS 源碼後，必須產生正式的編譯結果以供交付：
+
 ```bash
 npm run build
 ```
-輸出至：`public/assets/css/app.css`
+
+**交付規範：**
+1. 必須將 `public/assets/css/app.css` 納入 Git 提交。
+2. 必須將 `package-lock.json` 納入 Git 提交以確保版本一致。
+3. 提交前請確保 `npm run build` 已執行，以更新預編譯結果。
 
 ## 4. 目錄規範
 - `resources/css/app.css`：Tailwind CSS 原始碼與設計變數

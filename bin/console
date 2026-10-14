@@ -13,7 +13,9 @@ $command = $argv[1] ?? 'list';
 switch ($command) {
     case 'migrate':
         $manager = new MigrationManager($app->db->getPdo());
-        $manager->applyMigrations();
+        if (!$manager->applyMigrations()) {
+            exit(1);
+        }
         break;
     case 'module:list':
         $modules = require __DIR__ . '/../config/modules.php';
