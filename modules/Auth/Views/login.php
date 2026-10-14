@@ -1,33 +1,73 @@
-<div class="text-center">
-    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-50 text-indigo-600 mb-4">
-        <i data-lucide="shield-check" class="w-10 h-10"></i>
-    </div>
-    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">ZYX / BASE</h2>
-    <p class="mt-2 text-sm text-slate-500">Sign in to your management console</p>
-</div>
+<div class="min-h-screen flex items-center justify-center bg-[#f5f6f8] px-6 py-12">
+  <div class="w-full max-w-[420px]">
 
-<form class="mt-8 space-y-6" action="/auth/login" method="POST">
-    <div class="rounded-md shadow-sm -space-y-px">
-        <div class="mb-4">
-            <label for="username" class="block text-sm font-medium text-slate-700 mb-1">Username</label>
-            <input id="username" name="username" type="text" required class="appearance-none relative block w-full px-3 py-3 border border-slate-300 placeholder-slate-400 text-slate-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-all" placeholder="Enter your username">
+    <div class="rounded-2xl border border-slate-200 bg-white px-8 py-10 shadow-sm">
+
+      <!-- Brand -->
+      <div class="mb-10 text-center">
+        <div class="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50">
+          <i data-lucide="shield-check" class="h-6 w-6 text-indigo-600"></i>
         </div>
+
+        <h1 class="text-3xl font-bold tracking-tight text-slate-950">
+          ZYX / BASE
+        </h1>
+
+        <p class="mt-2 text-sm text-slate-500">
+          Sign in to your workspace
+        </p>
+      </div>
+
+      <!-- Login form -->
+      <form method="POST" action="/auth/login" class="space-y-6">
+        <?php if (isset($error)): ?>
+            <div class="p-3 rounded-lg bg-red-50 text-red-600 text-sm border border-red-100 mb-4">
+                <?php echo $error; ?>
+            </div>
+        <?php endif; ?>
+
         <div>
-            <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-            <input id="password" name="password" type="password" required class="appearance-none relative block w-full px-3 py-3 border border-slate-300 placeholder-slate-400 text-slate-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm transition-all" placeholder="••••••••">
+          <label for="username" class="mb-2 block text-sm font-medium text-slate-700">
+            Username
+          </label>
+          <input
+            id="username"
+            type="text"
+            name="username"
+            autocomplete="username"
+            required
+            placeholder="Enter your username"
+            class="block h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10"
+          >
         </div>
-    </div>
 
-    <div>
-        <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all shadow-md shadow-indigo-200">
-            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                <i data-lucide="lock" class="w-4 h-4 text-indigo-300 group-hover:text-indigo-200"></i>
-            </span>
-            Sign in
+        <div>
+          <label for="password" class="mb-2 block text-sm font-medium text-slate-700">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            autocomplete="current-password"
+            required
+            placeholder="Enter your password"
+            class="block h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10"
+          >
+        </div>
+
+        <button
+          type="submit"
+          class="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-slate-950 text-sm font-semibold text-white transition hover:bg-slate-800 active:scale-[0.99]"
+        >
+          Sign in
+          <i data-lucide="arrow-right" class="h-4 w-4"></i>
         </button>
+      </form>
     </div>
-</form>
 
-<div class="text-center text-xs text-slate-400 mt-6">
-    &copy; 2026 ZYX TEO. All rights reserved.
+    <p class="mt-8 text-center text-xs text-slate-400">
+      © 2026 ZYX TEO. All rights reserved.
+    </p>
+  </div>
 </div>

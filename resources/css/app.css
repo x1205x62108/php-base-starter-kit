@@ -1,7 +1,7 @@
 @import "tailwindcss" source(none);
 
-@source "../views";
-@source "../../modules";
+@source "../views/**/*.php";
+@source "../../modules/**/*.php";
 
 @theme {
   --color-primary: var(--color-slate-900);
