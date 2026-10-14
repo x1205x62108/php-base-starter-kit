@@ -8,6 +8,7 @@ Modern, lightweight PHP application architecture following the "One-click" and "
 Establish the most basic execution environment, program architecture, and SQLite support.
 - **V0.1**: Base Skeleton
 - **V0.2**: Base Runtime (Bootstrap, Router, Request, Response)
+- **V0.2.2**: Tailwind CSS v4 Integration (Current)
 - **V0.3**: Base Database (SQLite + PDO, Migrations)
 - **V0.4**: Base Views (Layout, Renderer)
 - **V0.5**: Base Foundation (Helpers, Middleware)
@@ -28,6 +29,11 @@ Template derived from Starter Kit for specific business needs.
 2. `cd php-base-starter-kit`
 3. `./scripts/install.sh`
 
+### Frontend Setup (Optional for Runtime)
+If you want to modify the UI, you need Node.js:
+1. `npm install`
+2. `npm run dev`
+
 ### Start Development Server
 `./scripts/start.sh` (or `.\scripts\start.ps1` on Windows)
 
@@ -35,9 +41,9 @@ Local URL: http://localhost:8000
 
 ## 📂 Core Abilities
 - **Bootstrap**: Unified initialization via `Application.php`.
+- **Tailwind v4**: Next-gen styling engine built for speed.
 - **Router**: Regex-based routing for GET/POST and Controllers.
 - **Database**: SQLite-first with PDO and a custom Migration engine.
 - **View Renderer**: Simple PHP-based SSR with Layout support.
-- **Error Handling**: Unified exception and HTTP error pages.
 
 Built with 🦊✨ for the King.
