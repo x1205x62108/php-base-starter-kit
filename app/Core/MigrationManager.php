@@ -3,7 +3,7 @@
 namespace App\Core;
 
 use PDO;
-use Exception;
+use Throwable;
 
 class MigrationManager
 {
@@ -44,8 +44,10 @@ class MigrationManager
                 $this->pdo->commit();
                 echo "DONE" . PHP_EOL;
                 $count++;
-            } catch (Exception $e) {
-                $this->pdo->rollBack();
+            } catch (Throwable $e) {
+                if ($this->pdo->inTransaction()) {
+                    $this->pdo->rollBack();
+                }
                 echo "FAILED: " . $e->getMessage() . PHP_EOL;
                 $success = false;
                 break;

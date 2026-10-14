@@ -1,4 +1,5 @@
 # Installation script for ZYX PHP Base Starter Kit
+$ErrorActionPreference = "Stop"
 
 Write-Host "Starting Installation..." -ForegroundColor Cyan
 
@@ -19,7 +20,8 @@ if (Get-Command composer -ErrorAction SilentlyContinue) {
     Write-Host "Running composer install..."
     composer install
 } else {
-    Write-Warning "Composer not found. Please run 'composer install' manually."
+    Write-Error "Composer not found. Please install composer."
+    exit 1
 }
 
 # 4. Initialize SQLite
